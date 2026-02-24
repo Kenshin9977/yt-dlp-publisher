@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: '0 6 * * *'  # daily at 06:00 UTC
   workflow_dispatch:
+    inputs:
+      force-publish:
+        description: 'Force publish even if already up to date'
+        type: boolean
+        default: false
 
 permissions:
   id-token: write
@@ -116,8 +121,13 @@ jobs:
         working-directory: yt-dlp
         run: git push origin package
 
+      - name: Checkout package for force publish
+        if: inputs.force-publish == true && steps.check-new.outputs.already-up-to-date == 'true'
+        working-directory: yt-dlp
+        run: git checkout origin/package -B package
+
       - name: Get version
-        if: steps.merge-package.outputs.merge-ok == 'true'
+        if: steps.merge-package.outputs.merge-ok == 'true' || inputs.force-publish == true
         id: version
         working-directory: yt-dlp
         run: |
