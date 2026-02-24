@@ -22,7 +22,7 @@ jobs:
           git clone --depth=1 --branch master https://x-access-token:${{ secrets.YT_DLP_DISPATCH_TOKEN }}@github.com/Kenshin9977/yt-dlp.git yt-dlp
           cd yt-dlp
           git fetch --unshallow
-          git fetch origin package
+          git fetch origin package:refs/remotes/origin/package
 
       - name: Configure git
         working-directory: yt-dlp
